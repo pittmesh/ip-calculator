@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PittMesh IP Address calculator</title>
+  </head>
+  <body>
+    <h1>PittMesh IP address calculator</h1>
+    <hr/>
+    <p>
+    This tool takes a router's MAC address and calculates the two IP addresses
+    that the router needs: mesh interface and wlan client interface.
+    </p>
+    <form id="calc" onSubmit="calc()">
+      <fieldset form="calc">
+        <legend>Input</legend>
+        <label for="mac">MAC address</label>
+        <input name="mac" id="mac"/>
+        <button type="button" onClick="calc()">Calculate</button>
+      </fieldset>
+      <fieldset form="calc">
+        <legend>Output</legend>
+        <label for="mesh">Mesh IP</label>
+        <input name="mesh" id="mesh"/>
+        <label for="wlan">WLAN IP</label>
+        <input name="wlan" id="wlan"/>
+      </fieldset>
+    </form>
+    <script>
+      // constants
+      var ubiquitiMacs = ["F09FC2", "DC9FDB", "802AA8", "687251", "44D9E7", "24A43C", "0418D6", "002722", "00156D"];
+      var meshPrefix = [100];
+      var wlanPrefix = [10];
+      var wlanSuffix = [1];
+      
+      var macEl = document.getElementById('mac');
+      var meshEl = document.getElementById('mesh');
+      var wlanEl = document.getElementById('wlan');
+
+
+      function calc() {
+        var mac = macEl.value;
+        var macArray = mac.split(":")
+
+        if(macArray.length != 6) return;
+
+        checkForUbiquiti(firstThreeOctets(macArray));
+
+        var macArrayDecimals = convertHexToDecimals(macArray);
+        var meshIP = calcMeshIP(lastThreeOctets(macArrayDecimals));
+        var wlanIP = calcWlanIP(lastTwoOctets(macArrayDecimals));
+
+        meshEl.value = meshIP;
+        wlanEl.value = wlanIP;
+
+        return false;
+      }
+
+      function calcMeshIP(lastThree) {
+        return makeIP(meshPrefix.concat(lastThree));
+      }
+
+      function calcWlanIP(lastTwo) {
+        return makeIP(wlanPrefix.concat(lastTwo).concat(wlanSuffix));
+      }
+
+      function makeIP(arr) { return arr.join("."); }
+
+      function checkForUbiquiti(firstThree) {
+        if(-1 == ubiquitiMacs.indexOf(firstThree.join(""))){
+          displayWarning("The MAC address does not appear to be a Ubiquiti MAC. The IP address calculation may be invalid.");
+        }
+      }
+
+      function displayWarning(text) {
+        console.log(text);
+      }
+
+      function convertHexToDecimals(arr) { return arr.map( function(h) { return parseInt(h, 16); } ); }
+      function firstThreeOctets(arr) { return arr.slice(0, 3); }
+      function lastThreeOctets(arr) { return arr.slice(3, 6); }
+      function lastTwoOctets(arr) { return arr.slice(4, 6); }
+
+    </script>
+  </body>
+</html>
+
