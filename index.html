@@ -101,8 +101,9 @@
       }
       //TODO: make warnings red and successes green
       function createLogLineElement(text) {
-        var line = document.createElement("p")
-        line.innerText = text;
+        var line = document.createElement("p");
+        var textEl = document.createTextNode(text);
+        line.appendChild(textEl);
         return line;
       }
 
@@ -111,9 +112,11 @@
       function lastThreeOctets(arr) { return arr.slice(3, 6); }
       function lastTwoOctets(arr) { return arr.slice(4, 6); }
 
-      HTMLElement.prototype.appendFirst=function(childNode){
-          if(this.firstChild)this.insertBefore(childNode,this.firstChild);
-          else this.appendChild(childNode);
+      HTMLElement.prototype.appendFirst = function(childNode){
+          if(this.firstChild)
+            this.insertBefore(childNode, this.firstChild);
+          else
+            this.appendChild(childNode);
       };
 
     </script>
