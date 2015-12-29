@@ -28,9 +28,11 @@
       <fieldset form="calc">
         <legend>Output</legend>
         <label for="mesh">Mesh IP</label>
-        <input name="mesh" id="mesh"/>
+        <input name="mesh" id="mesh" disabled="disabled"/>
+        <button id="copy-mesh">copy</button>
         <label for="wlan">WLAN IP</label>
-        <input name="wlan" id="wlan"/>
+        <input name="wlan" id="wlan" disabled="disabled"/>
+        <button id="copy-wlan">copy</button>
       </fieldset>
     </form>
     <div id="transcript">
@@ -140,6 +142,33 @@
             this.appendChild(childNode);
       };
 
+      // and now the copy button stuff
+      var copyMesh = document.getElementById("copy-mesh");
+      var copyWlan = document.getElementById("copy-wlan");
+
+      function doCopy(element) {
+        element.disabled = false;
+        element.select();
+        try {
+          var successful = document.execCommand('copy');
+          var msg = successful ? 'Successfully' : 'Unsuccessfully';
+          log(msg + " copied to clipboard.");
+        } catch (err) {
+          log("Oops, unable to copy to clipboard. You are on your own.");
+        } finally {
+          element.disabled = true;
+        }
+      }
+
+      function copyInput(element) {
+        return function(event) {
+          event.preventDefault();
+          doCopy(element);
+        }
+      }
+
+      copyMesh.addEventListener('click', copyInput(meshEl));
+      copyWlan.addEventListener('click', copyInput(wlanEl));
     </script>
   </body>
 </html>
