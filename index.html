@@ -82,9 +82,9 @@
       }
 
       function separateOctets(mac) {
-        if(mac.indexOf(":"))
+        if(-1 != mac.indexOf(":"))
           return mac.split(":");
-        if(mac.indexOf("-"))
+        if(-1 != mac.indexOf("-"))
           return mac.split("-");
         //TODO: handle unseparated
       }
