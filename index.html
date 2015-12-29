@@ -2,6 +2,14 @@
 <html>
   <head>
     <title>PittMesh IP Address calculator</title>
+    <style>
+      #transcript {
+        border: 2px groove threedface;
+        font-family: monospace;
+        padding: 0.35em 0.75em 0.75em 0.625em;
+        margin: 8px 2px;
+      }
+    </style>
   </head>
   <body>
     <h1>PittMesh IP address calculator</h1>
@@ -25,23 +33,30 @@
         <input name="wlan" id="wlan"/>
       </fieldset>
     </form>
+    <div id="transcript">
+      <p>Log messages will appear here.</p>
+    </div>
     <script>
       // constants
       var ubiquitiMacs = ["F09FC2", "DC9FDB", "802AA8", "687251", "44D9E7", "24A43C", "0418D6", "002722", "00156D"];
       var meshPrefix = [100];
       var wlanPrefix = [10];
       var wlanSuffix = [1];
-      
+
       var macEl = document.getElementById('mac');
       var meshEl = document.getElementById('mesh');
       var wlanEl = document.getElementById('wlan');
+      var transcriptEl = document.getElementById('transcript');
 
 
       function calc() {
         var mac = macEl.value;
         var macArray = mac.split(":")
 
-        if(macArray.length != 6) return;
+        if(macArray.length != 6) {
+          displayWarning("The MAC address does not appear to be valid. Ensure that there are six octets, separated by a colon (:).");
+          return;
+        }
 
         checkForUbiquiti(firstThreeOctets(macArray));
 
@@ -52,6 +67,7 @@
         meshEl.value = meshIP;
         wlanEl.value = wlanIP;
 
+        log("Success!");
         return false;
       }
 
@@ -71,8 +87,23 @@
         }
       }
 
+      function log(text) {
+        var date = new Date();
+        var timestamp = [date.getHours(), date.getMinutes(), date.getSeconds()].join(":");
+        var message = "[" + timestamp + "] " + text;
+
+        transcriptEl.appendFirst(createLogLineElement(message));
+        console.log(message);
+      }
+
       function displayWarning(text) {
-        console.log(text);
+        log(text);
+      }
+      //TODO: make warnings red and successes green
+      function createLogLineElement(text) {
+        var line = document.createElement("p")
+        line.innerText = text;
+        return line;
       }
 
       function convertHexToDecimals(arr) { return arr.map( function(h) { return parseInt(h, 16); } ); }
@@ -80,7 +111,11 @@
       function lastThreeOctets(arr) { return arr.slice(3, 6); }
       function lastTwoOctets(arr) { return arr.slice(4, 6); }
 
+      HTMLElement.prototype.appendFirst=function(childNode){
+          if(this.firstChild)this.insertBefore(childNode,this.firstChild);
+          else this.appendChild(childNode);
+      };
+
     </script>
   </body>
 </html>
-
