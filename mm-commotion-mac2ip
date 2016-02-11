@@ -41,6 +41,17 @@ function listall {
   done
 }
 
+function usage {
+  echo "Usage: $0 <MAC address>"
+  echo "Usage: $0 --listall"
+  echo
+  echo "examples:"
+  echo "  $0 DC:9F:DB:CE:13:57"
+  echo "  $0 DC-9F-DB-CE-13-57"
+  echo "  $0 DC 9F DB CE 13 57"
+  echo "  $0 dc 9f db ce 13 57"
+}
+
 # Check for --listall, otherwise proceed
 
 if [ "$*" = "--listall" ]; then
@@ -71,15 +82,7 @@ elif [ $args -eq 6 ]; then
   mac5=`echo $5|tr [a-z] [A-Z]`
   mac6=`echo $6|tr [a-z] [A-Z]`
 else
-  echo "Usage: $0 <MAC address>"
-  echo "Usage: $0 --listall"
-  echo
-  echo "examples:"
-  echo "  $0 DC:9F:DB:CE:13:57"
-  echo "  $0 DC-9F-DB-CE-13-57"
-  echo "  $0 DC 9F DB CE 13 57"
-  echo "  $0 dc 9f db ce 13 57"
-
+  usage
   exit
 fi
 
