@@ -1,6 +1,10 @@
 #!/bin/bash
 #
-# Script written for PittMesh by Jason Khanlar
+# © 2016 Meta Mesh Wireless Communications. All rights reserved.
+# Licensed under the terms of the MIT license.
+#
+# AUTHORS
+# * Jason Khanlar
 #
 
 # Check for --listall, otherwise proceed
