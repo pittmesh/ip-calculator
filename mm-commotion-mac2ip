@@ -90,7 +90,7 @@ fi
 # DC-9F-DB
 
 if [ ! $mac1 = "DC" -o ! $mac2 = "9F" -o ! $mac3 = "DB" ]; then
-  echo "Invalid MAC address. Make sure it begins with DC:9F:DB"
+  echo "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported."
   exit
 fi
 
