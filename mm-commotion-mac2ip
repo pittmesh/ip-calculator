@@ -7,7 +7,7 @@
 # * Jason Khanlar
 #
 
-function listall {
+function list-all {
   mac1=DC
   mac2=9F
   mac3=DB
@@ -43,7 +43,7 @@ function listall {
 
 function usage {
   echo "Usage: $0 <MAC address>"
-  echo "Usage: $0 --listall"
+  echo "Usage: $0 --list-all"
   echo
   echo "examples:"
   echo "  $0 DC:9F:DB:CE:13:57"
@@ -52,14 +52,14 @@ function usage {
   echo "  $0 dc 9f db ce 13 57"
 }
 
-# Check for --listall, otherwise proceed
+# Check for --list-all, otherwise proceed
 
-if [ "$*" = "--listall" ]; then
-  listall
+if [ "$*" = "--list-all" ]; then
+  list-all
   exit
 fi
 
-# Proceed if not --listall
+# Proceed if not --list-all
 
 # Get # of arguments passed to this script
 args=$#
