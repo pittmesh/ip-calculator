@@ -21,38 +21,12 @@ function listall {
   ip4=0
 
   for ip2 in `seq 0 255`;do
-    #((ip2s63=ip2-63))
-    #((ip2=ip2-63))
-
     mac4=`echo "obase=16; $ip2" | bc`
 
     ((ip2=(ip2+64)%64 + 64))
 
-#    # Adjust ip 2nd octet to cycle through 64-127 four times
-#    if [ $ip2 -ge 256 ]; then
-#      ((ip2-=192))
-#    elif [ $ip2 -ge 192 ]; then
-#      ((ip2-=128))
-#    elif [ $ip2 -ge 128 ]; then
-#      ((ip2-=64))
-#    fi
-#    ip2=$((ip2 % 64 + 63))
-
     # Pad with 0
     if [ ${#mac4} -eq 1 ]; then mac4=0$mac4; fi
-
-#    for ip3 in `seq 255`;do
-#      mac5=`echo "obase=16; $ip3" | bc`
-
-#      # Pad with 0
-#      if [ ${#mac5} -eq 1 ]; then mac5=0$mac5; fi
-
-#      for ip4 in `seq 255`;do
-#        mac6=`echo "obase=16; $ip4" | bc`
-
-#        # Pad with 0
-#        if [ ${#mac6} -eq 1 ]; then mac6=0$mac6; fi
-
         # Format IP address
         ip="$ip1.$ip2.$ip3.$ip4"
 
@@ -64,8 +38,6 @@ function listall {
 
         # Output matching IP address and MAC address
         echo "$ip $space=> $mac"
-#      done
-#    done
   done
 }
 
@@ -125,11 +97,6 @@ ip2=`echo "ibase=16; $mac4" | bc`
 ip3=`echo "ibase=16; $mac5" | bc`
 ip4=`echo "ibase=16; $mac6" | bc`
 
-# nmap -sL -n 100.64.0.0/10
-# DC:9F:DB:01:01:01 - DC:9F:DB:FF:FF:FF
-# 100.64.0.0        - 100.127.255.255
-
 ((ip2+=63))
 
 echo "$ip1.$ip2.$ip3.$ip4"
-#printf "%x\n" $oct4|tr [a-z] [A-Z]
