@@ -7,9 +7,7 @@
 # * Jason Khanlar
 #
 
-# Check for --listall, otherwise proceed
-
-if [ "$*" = "--listall" ]; then
+function listall {
   mac1=DC
   mac2=9F
   mac3=DB
@@ -69,6 +67,12 @@ if [ "$*" = "--listall" ]; then
 #      done
 #    done
   done
+}
+
+# Check for --listall, otherwise proceed
+
+if [ "$*" = "--listall" ]; then
+  listall
   exit
 fi
 
