@@ -83,7 +83,7 @@ elif [ $args -eq 6 ]; then
   mac6=`echo $6|tr [a-z] [A-Z]`
 else
   usage
-  exit
+  exit 1
 fi
 
 # Ensure that we are working with the correct large MAC address block
@@ -91,7 +91,7 @@ fi
 
 if [ ! $mac1 = "DC" -o ! $mac2 = "9F" -o ! $mac3 = "DB" ]; then
   echo "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported."
-  exit
+  exit 1
 fi
 
 # Convert last three hexadecimal octets to decimal values
