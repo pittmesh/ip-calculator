@@ -1,0 +1,104 @@
+#!/bin/bash
+#
+# � 2016 Meta Mesh Wireless Communities. All rights reserved.
+# Licensed under the terms of the MIT license.
+#
+# AUTHORS
+# * Jason Khanlar
+#
+
+script_to_test=./mm-commotion-mac2ip
+
+test() {
+    ((attempts++))
+    local mac=$1
+    local ip=$2
+
+    if [[ "$($script_to_test $mac)" != "$ip" ]]; then
+        echo "$mac did not resolve to $ip"
+        ((failure++))
+    else
+        echo "$mac resolved to $ip"
+    fi
+}
+
+rand64to127() {
+    ((randdec=$RANDOM / 512 + 64))
+    return $randdec
+}
+
+rand0to255() {
+    ((randdec=$RANDOM / 128))
+    return $randdec
+}
+
+randIPMA() {
+    local a
+    randMA=("DC:9F:DB" "DC:9F:DB" "DC:9F:DB" "DC:9F:DB")
+    randIP="100"
+    rand64to127
+    randMA[0]="${randMA[0]}:$(printf "%02X\n" $((randdec - 64)))"
+    randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
+    randMA[2]="${randMA[2]}:$(printf "%02X\n" $((randdec + 64)))"
+    randMA[3]="${randMA[3]}:$(printf "%02X\n" $((randdec + 128)))"
+    randIP="$randIP.$randdec"
+    for face in ^ ^; do
+        rand0to255
+        randMA[0]="${randMA[0]}:$(printf "%02X\n" $randdec)"
+        randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
+        randMA[2]="${randMA[2]}:$(printf "%02X\n" $randdec)"
+        randMA[3]="${randMA[3]}:$(printf "%02X\n" $randdec)"
+        randIP="$randIP.$randdec"
+    done
+    return
+}
+
+random-tests() {
+    for a in {1..100}; do
+        randIPMA
+        test "${randMA[0]}" "$randIP"
+        test "${randMA[1]}" "$randIP"
+        test "${randMA[2]}" "$randIP"
+        test "${randMA[3]}" "$randIP"
+    done
+}
+
+list-all-tests() {
+    for cur in $($script_to_test --list-all|sed 's|^\([0-9.]*\) *=> \([A-F0-9:]*\)$|\1 \2|');do
+        if [ $((count++ % 2)) -eq 1 ];then
+            testMA[$((count / 2 - 1))]=$cur
+            testIP[$((count / 2 - 1))]=$last
+        fi
+        last=$cur
+    done
+    
+    for a in $(seq 0 $((${#testMA[@]}-1))); do
+        test ${testMA[$a]} ${testIP[$a]}
+    done
+}
+
+list-all-tests
+random-tests
+
+fail() {
+    echo "There were $failure/$attempts failures."
+    exit 1
+}
+
+success() {
+    if command -v ponysay > /dev/null 2>&1; then
+        ponysay All tests passed
+    elif command -v cowsay > /dev/null 2>&1; then
+        cowsay All tests passed
+    elif command -v figlet > /dev/null 2>&1; then
+        figlet -f mini All tests passed
+    else
+        printf "All tests passed\n"
+    fi
+}
+
+if [[ $failure -gt 0 ]]; then
+    fail;
+else
+    success 
+fi
