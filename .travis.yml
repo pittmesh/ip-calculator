@@ -1,2 +1,6 @@
 script:
   - ./mm-commotion-mac2ip.tests
+
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq bc
