@@ -1,0 +1,2 @@
+script:
+  - ./mm-commotion-mac2ip.tests
