@@ -61,6 +61,11 @@ while getopts ":-:" opt; do
     fi
 done
 
+if [[ "$*" =~ -*- ]]; then
+    usage
+    exit 1
+fi
+
 # Proceed if not --list-all
 
 # Get # of arguments passed to this script
