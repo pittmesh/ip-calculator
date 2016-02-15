@@ -23,7 +23,7 @@ function list-all {
   for ip2 in `seq 0 255`;do
     mac4=$(printf "%02X\n" $ip2)
 
-    ((ip2=(ip2+64)%64 + 64))
+    ((ip2=ip2%64 + 64))
 
     # Format IP address
     ip="$ip1.$ip2.$ip3.$ip4"
@@ -52,9 +52,16 @@ function usage {
 
 # Check for --list-all, otherwise proceed
 
-if [ "$*" = "--list-all" ]; then
-  list-all
-  exit
+while getopts ":-:" opt; do
+    if [ $OPTARG = "list-all" ]; then
+        list-all
+        exit
+    fi
+done
+
+if [[ "$*" =~ -*- ]]; then
+    usage
+    exit 1
 fi
 
 # Proceed if not --list-all
@@ -98,7 +105,6 @@ ip2=$(printf "%d" "0x$mac4")
 ip3=$(printf "%d" "0x$mac5")
 ip4=$(printf "%d" "0x$mac6")
 
-((ip2+=64))
-while [ $ip2 -ge 128 ];do ((ip2-=64)); done
+((ip2=ip2%64 + 64))
 
 echo "$ip1.$ip2.$ip3.$ip4"
