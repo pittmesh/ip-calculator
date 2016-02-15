@@ -26,34 +26,29 @@ my $list_all = '';
 GetOptions('list-all!' => \$list_all) or pod2usage(-exitval => 1);
 
 sub list_all {
-    my $mac1 = hex 'DC';
-    my $mac2 = hex '9F';
-    my $mac3 = hex 'DB';
-    my $mac4 = hex '00';
-    my $mac5 = hex '00';
-    my $mac6 = hex '00';
+    my $mac1 = 0xDC;
+    my $mac2 = 0x9F;
+    my $mac3 = 0xDB;
+    my $mac4 = 0x00;
+    my $mac5 = 0x00;
+    my $mac6 = 0x00;
 
     my $ip1 = 100;
     my $ip2 = 64;
     my $ip3 = 0;
     my $ip4 = 0;
 
-    for (0 .. 255) {
-        $mac4 = $_;
+    for my $i (0 .. 255) {
+        $mac4 = $i;
         
-        $ip2 = $_ % 64 + 64;
-
         # Format IP address
-        $ip = "$ip1.$ip2.$ip3.$ip4";
+        my $ip = sprintf('%d.%d.%d.%d', $ip1, $i % 64 + 64, $ip3, $ip4);
 
         # Format MAC address
         $mac = sprintf('%02X:%02X:%02X:%02X:%02X:%02X', $mac1, $mac2, $mac3, $mac4, $mac5, $mac6);
 
-        # Pad with space
-        $space = sprintf('%*s', 15 - length($ip));
-
         ## Output matching IP address and MAC address
-        print "$ip $space=> $mac\n";
+        printf("%-15s => %s\n", $ip, $mac);
     }
 }
 
@@ -64,7 +59,7 @@ if ($list_all) { list_all(); exit; }
 # Proceed if not --list-all
 
 # Get # of arguments passed to this script
-$args=$#ARGV + 1;
+$args=@ARGV;
 
 # # of arguments should be 1 or 6
 # 1 -> DC:9F:DB:CE:13:57 -or- DC-9F-DB-CE-13-57
