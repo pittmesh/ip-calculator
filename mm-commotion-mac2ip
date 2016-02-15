@@ -107,7 +107,6 @@ ip2=`echo "ibase=16; $mac4" | bc`
 ip3=`echo "ibase=16; $mac5" | bc`
 ip4=`echo "ibase=16; $mac6" | bc`
 
-((ip2+=64))
-while [ $ip2 -ge 128 ];do ((ip2-=64)); done
+((ip2=ip2%64 + 64))
 
 echo "$ip1.$ip2.$ip3.$ip4"
