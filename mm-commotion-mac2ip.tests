@@ -7,7 +7,7 @@
 # * Jason Khanlar
 #
 
-script_to_test=./mm-commotion-mac2ip
+scripts_to_test=(./mm-commotion-mac2ip)
 
 test() {
     ((attempts++))
@@ -77,23 +77,25 @@ list-all-tests() {
     done
 }
 
-list-all-tests
-random-tests
+for script_to_test in "$scripts_to_test"; do
+    list-all-tests
+    random-tests
+done
 
 fail() {
-    echo "There were $failure/$attempts failures."
+    echo "There were $failure/$attempts failures for $script_to_test."
     exit 1
 }
 
 success() {
     if command -v ponysay > /dev/null 2>&1; then
-        ponysay All tests passed
+        ponysay All tests passed for $script_to_test
     elif command -v cowsay > /dev/null 2>&1; then
-        cowsay All tests passed
+        cowsay All tests passed for $script_to_test
     elif command -v figlet > /dev/null 2>&1; then
-        figlet -f mini All tests passed
+        figlet -f mini All tests passed for $script_to_test
     else
-        printf "All tests passed\n"
+        printf "All tests passed for $script_to_test\n"
     fi
 }
 
