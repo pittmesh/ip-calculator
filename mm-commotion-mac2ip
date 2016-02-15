@@ -71,16 +71,16 @@ args=$#
 if [ $args -eq 1 ]; then
   # Split 1 argument into 6 separate arguments, 1 for each octet
   # and pass the 6 arguments to a new instance of this script
-  $0 `echo $1 | tr ":-" " "`
+  $0 $(echo $1 | tr ":-" " ")
   # After the new instance completes, make sure to end this one
   exit
 elif [ $args -eq 6 ]; then
-  mac1=`echo $1|tr [a-z] [A-Z]`
-  mac2=`echo $2|tr [a-z] [A-Z]`
-  mac3=`echo $3|tr [a-z] [A-Z]`
-  mac4=`echo $4|tr [a-z] [A-Z]`
-  mac5=`echo $5|tr [a-z] [A-Z]`
-  mac6=`echo $6|tr [a-z] [A-Z]`
+  mac1=$(echo $1|tr '[a-z]' '[A-Z]')
+  mac2=$(echo $2|tr '[a-z]' '[A-Z]')
+  mac3=$(echo $3|tr '[a-z]' '[A-Z]')
+  mac4=$(echo $4|tr '[a-z]' '[A-Z]')
+  mac5=$(echo $5|tr '[a-z]' '[A-Z]')
+  mac6=$(echo $6|tr '[a-z]' '[A-Z]')
 else
   usage
   exit 1
