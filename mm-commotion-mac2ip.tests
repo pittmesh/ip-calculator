@@ -86,7 +86,6 @@ list-all-tests() {
 }
 
 for script_to_test in "${scripts_to_test[@]}"; do
-    echo $script_to_test
     list-all-tests
     random-tests
 done
