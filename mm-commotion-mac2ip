@@ -54,10 +54,12 @@ function usage {
 
 # Check for --list-all, otherwise proceed
 
-if [ "$*" = "--list-all" ]; then
-  list-all
-  exit
-fi
+while getopts ":-:" opt; do
+    if [ $OPTARG = "list-all" ]; then
+        list-all
+        exit
+    fi
+done
 
 # Proceed if not --list-all
 
