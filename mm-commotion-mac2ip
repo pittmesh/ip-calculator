@@ -21,23 +21,21 @@ function list-all {
   ip4=0
 
   for ip2 in `seq 0 255`;do
-    mac4=`echo "obase=16; $ip2" | bc`
+    mac4=$(printf "%02X\n" $ip2)
 
     ((ip2=(ip2+64)%64 + 64))
 
-    # Pad with 0
-    if [ ${#mac4} -eq 1 ]; then mac4=0$mac4; fi
-        # Format IP address
-        ip="$ip1.$ip2.$ip3.$ip4"
+    # Format IP address
+    ip="$ip1.$ip2.$ip3.$ip4"
 
-        # Format MAC address
-        mac="$mac1:$mac2:$mac3:$mac4:$mac5:$mac6"
+    # Format MAC address
+    mac="$mac1:$mac2:$mac3:$mac4:$mac5:$mac6"
 
-        # Pad with space
-        space=`printf '%*s' "$((15 - ${#ip}))"`
+    # Pad with space
+    space=`printf '%*s' "$((15 - ${#ip}))"`
 
-        # Output matching IP address and MAC address
-        echo "$ip $space=> $mac"
+    # Output matching IP address and MAC address
+    echo "$ip $space=> $mac"
   done
 }
 
@@ -96,9 +94,9 @@ fi
 
 # Convert last three hexadecimal octets to decimal values
 ip1=100
-ip2=`echo "ibase=16; $mac4" | bc`
-ip3=`echo "ibase=16; $mac5" | bc`
-ip4=`echo "ibase=16; $mac6" | bc`
+ip2=$(printf "%d" "0x$mac4")
+ip3=$(printf "%d" "0x$mac5")
+ip4=$(printf "%d" "0x$mac6")
 
 ((ip2+=64))
 while [ $ip2 -ge 128 ];do ((ip2-=64)); done
