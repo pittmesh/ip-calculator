@@ -25,17 +25,17 @@ function list-all {
 
     ((ip2=(ip2+64)%64 + 64))
 
-        # Format IP address
-        ip="$ip1.$ip2.$ip3.$ip4"
+    # Format IP address
+    ip="$ip1.$ip2.$ip3.$ip4"
 
-        # Format MAC address
-        mac="$mac1:$mac2:$mac3:$mac4:$mac5:$mac6"
+    # Format MAC address
+    mac="$mac1:$mac2:$mac3:$mac4:$mac5:$mac6"
 
-        # Pad with space
-        space=`printf '%*s' "$((15 - ${#ip}))"`
+    # Pad with space
+    space=`printf '%*s' "$((15 - ${#ip}))"`
 
-        # Output matching IP address and MAC address
-        echo "$ip $space=> $mac"
+    # Output matching IP address and MAC address
+    echo "$ip $space=> $mac"
   done
 }
 
