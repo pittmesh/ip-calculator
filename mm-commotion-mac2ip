@@ -21,12 +21,10 @@ function list-all {
   ip4=0
 
   for ip2 in `seq 0 255`;do
-    mac4=`echo "obase=16; $ip2" | bc`
+    mac4=$(printf "%02X\n" $ip2)
 
     ((ip2=(ip2+64)%64 + 64))
 
-    # Pad with 0
-    if [ ${#mac4} -eq 1 ]; then mac4=0$mac4; fi
         # Format IP address
         ip="$ip1.$ip2.$ip3.$ip4"
 
