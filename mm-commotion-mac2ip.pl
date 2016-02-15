@@ -87,7 +87,7 @@ my $mac6 = uc $ARGV[5];
 
 if ($mac1 ne "DC" || $mac2 ne "9F" || $mac3 ne "DB") {
     print "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported.\n";
-    exit 1
+    exit 1;
 }
 
 # Convert last three hexadecimal octets to decimal values
