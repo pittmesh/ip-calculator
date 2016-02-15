@@ -39,7 +39,7 @@ sub list_all {
     my $ip4 = 0;
 
     for (0 .. 255) {
-        $mac4 = sprintf('%02X', $ip2);
+        $mac4 = $_;
         
         $ip2 = $_ % 64 + 64;
 
