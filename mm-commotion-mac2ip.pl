@@ -7,6 +7,9 @@
 # * Jason Khanlar
 #
 
+use strict;
+use warnings;
+
 =pod
 
  Usage: ./mm-commotion-mac2ip.pl <MAC address>
