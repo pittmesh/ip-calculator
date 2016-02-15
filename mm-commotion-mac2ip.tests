@@ -9,6 +9,14 @@
 
 scripts_to_test=(./mm-commotion-mac2ip)
 
+if [ ${#@} -gt 0 ]; then
+    c=0
+    for arg in "$@"; do
+        scripts_to_test[$c]="./${arg}"
+        ((c++))
+    done
+fi
+
 test() {
     ((attempts++))
     local mac=$1
@@ -77,25 +85,26 @@ list-all-tests() {
     done
 }
 
-for script_to_test in "$scripts_to_test"; do
+for script_to_test in "${scripts_to_test[@]}"; do
+    echo $script_to_test
     list-all-tests
     random-tests
 done
 
 fail() {
-    echo "There were $failure/$attempts failures for $script_to_test."
+    echo "There were $failure/$attempts failures."
     exit 1
 }
 
 success() {
     if command -v ponysay > /dev/null 2>&1; then
-        ponysay All tests passed for $script_to_test
+        ponysay All tests passed.
     elif command -v cowsay > /dev/null 2>&1; then
-        cowsay All tests passed for $script_to_test
+        cowsay All tests passed.
     elif command -v figlet > /dev/null 2>&1; then
-        figlet -f mini All tests passed for $script_to_test
+        figlet -f mini All tests passed.
     else
-        printf "All tests passed for $script_to_test\n"
+        printf "All tests passed.\n"
     fi
 }
 
