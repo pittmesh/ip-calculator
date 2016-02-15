@@ -48,7 +48,7 @@ sub list_all {
         my $ip = sprintf('%d.%d.%d.%d', $ip1, $i % 64 + 64, $ip3, $ip4);
 
         # Format MAC address
-        $mac = sprintf('%02X:%02X:%02X:%02X:%02X:%02X', $mac1, $mac2, $mac3, $mac4, $mac5, $mac6);
+        my $mac = sprintf('%02X:%02X:%02X:%02X:%02X:%02X', $mac1, $mac2, $mac3, $mac4, $mac5, $mac6);
 
         ## Output matching IP address and MAC address
         printf("%-15s => %s\n", $ip, $mac);
@@ -62,7 +62,7 @@ if ($list_all) { list_all(); exit; }
 # Proceed if not --list-all
 
 # Get # of arguments passed to this script
-$args=@ARGV;
+my $args=@ARGV;
 
 # # of arguments should be 1 or 6
 # 1 -> DC:9F:DB:CE:13:57 -or- DC-9F-DB-CE-13-57
@@ -70,21 +70,17 @@ $args=@ARGV;
 
 if ($args == 1) {
     # Split 1 argument into 6 separate arguments, 1 for each octet
-    # and pass the 6 arguments to a new instance of this script
     @ARGV = split('[:-]', $ARGV[0]);
-    system $0, @ARGV;
-    # After the new instance completes, make sure to end this one
-    exit
-} elsif ($args == 6) {
-    $mac1 = uc $ARGV[0];
-    $mac2 = uc $ARGV[1];
-    $mac3 = uc $ARGV[2];
-    $mac4 = uc $ARGV[3];
-    $mac5 = uc $ARGV[4];
-    $mac6 = uc $ARGV[5];
-} else {
+} elsif ($args != 6) {
     pod2usage(-exitval => 1);
 }
+
+my $mac1 = uc $ARGV[0];
+my $mac2 = uc $ARGV[1];
+my $mac3 = uc $ARGV[2];
+my $mac4 = uc $ARGV[3];
+my $mac5 = uc $ARGV[4];
+my $mac6 = uc $ARGV[5];
 
 # Ensure that we are working with the correct large MAC address block
 # DC-9F-DB
@@ -95,10 +91,10 @@ if ($mac1 ne "DC" || $mac2 ne "9F" || $mac3 ne "DB") {
 }
 
 # Convert last three hexadecimal octets to decimal values
-$ip1=100;
-$ip2=hex($mac4);
-$ip3=hex($mac5);
-$ip4=hex($mac6);
+my $ip1=100;
+my $ip2=hex($mac4);
+my $ip3=hex($mac5);
+my $ip4=hex($mac6);
 
 $ip2 = $ip2 % 64 + 64;
 
