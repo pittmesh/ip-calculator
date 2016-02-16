@@ -76,27 +76,25 @@ if ($args == 1) {
     usage();
 }
 
-my $mac1 = uc $ARGV[0];
-my $mac2 = uc $ARGV[1];
-my $mac3 = uc $ARGV[2];
-my $mac4 = uc $ARGV[3];
-my $mac5 = uc $ARGV[4];
-my $mac6 = uc $ARGV[5];
+$_ = uc for @ARGV;
+my $i = 0; my @mac;
+for (@ARGV) { $mac[$i++] = $_; }
 
 # Ensure that we are working with the correct large MAC address block
 # DC-9F-DB
 
-if ($mac1 ne "DC" || $mac2 ne "9F" || $mac3 ne "DB") {
+if ($mac[0] ne "DC" || $mac[1] ne "9F" || $mac[2] ne "DB") {
     print "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported.\n";
     exit 1;
 }
 
 # Convert last three hexadecimal octets to decimal values
-my $ip1=100;
-my $ip2=hex($mac4);
-my $ip3=hex($mac5);
-my $ip4=hex($mac6);
+my @ip;
+$ip[0]=100;
+$ip[1]=hex($mac[3]);
+$ip[2]=hex($mac[4]);
+$ip[3]=hex($mac[5]);
 
-$ip2 = $ip2 % 64 + 64;
+$ip[1] = $ip[1] % 64 + 64;
 
-print "$ip1.$ip2.$ip3.$ip4\n";
+print "$ip[0].$ip[1].$ip[2].$ip[3]\n";
