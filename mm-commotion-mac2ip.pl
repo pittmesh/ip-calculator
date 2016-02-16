@@ -21,6 +21,7 @@ Examples:
         ./mm-commotion-mac2ip.pl DC 9F DB CE 13 57
         ./mm-commotion-mac2ip.pl dc 9f db ce 13 57
 USAGE
+    exit 1;
 }
 
 sub list_all {
@@ -48,6 +49,7 @@ sub list_all {
         ## Output matching IP address and MAC address
         printf("%-15s => %s\n", $ip, $mac);
     }
+    exit;
 }
 
 # Check for --list-all, otherwise proceed
@@ -55,7 +57,6 @@ sub list_all {
 if (@ARGV == 1 and $ARGV[0] =~ '-.*') {
     if ($ARGV[0] eq '--list-all') { list_all(); }
     else { usage(); }
-    exit;
 }
 
 # Proceed if not --list-all
@@ -71,7 +72,7 @@ if ($args == 1) {
     # Split 1 argument into 6 separate arguments, 1 for each octet
     @ARGV = split('[:-]', $ARGV[0]);
 } elsif ($args != 6) {
-    pod2usage(-exitval => 1);
+    usage();
 }
 
 my $mac1 = uc $ARGV[0];
