@@ -1,2 +1,3 @@
 script:
   - ./mm-commotion-mac2ip.tests
+  - ./mm-commotion-mac2ip.tests mm-commotion-mac2ip.pl
