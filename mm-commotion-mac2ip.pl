@@ -52,18 +52,15 @@ if (@ARGV == 1 and $ARGV[0] =~ m/^-/) {
 
 # Proceed if not --list-all
 
-# Get # of arguments passed to this script
-my $args=@ARGV;
-
 # # of arguments should be 1 or 6
 # 1 -> DC:9F:DB:CE:13:57 -or- DC-9F-DB-CE-13-57
 # 6 -> DC 9F DB CE 13 57
 
-if ($args == 1) {
+if (@ARGV == 1) {
     # Split 1 argument into 6 separate arguments, 1 for each octet
     @ARGV = split('[:-]', $ARGV[0]);
     if (@ARGV != 6) { usage(); }
-} elsif ($args != 6) {
+} elsif (@ARGV != 6) {
     usage();
 }
 
