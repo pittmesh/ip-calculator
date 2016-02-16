@@ -59,10 +59,9 @@ if (@ARGV == 1 and $ARGV[0] =~ m/^-/) {
 if (@ARGV == 1) {
     # Split 1 argument into 6 separate arguments, 1 for each octet
     @ARGV = split('[:-]', $ARGV[0]);
-    if (@ARGV != 6) { usage(); }
-} elsif (@ARGV != 6) {
-    usage();
 }
+
+if (@ARGV != 6) { usage(); }
 
 my @mac = @ARGV;
 $_ = uc for @mac;
@@ -76,12 +75,6 @@ if ($mac[0] ne "DC" || $mac[1] ne "9F" || $mac[2] ne "DB") {
 }
 
 # Convert last three hexadecimal octets to decimal values
-my @ip;
-$ip[0]=100;
-$ip[1]=hex($mac[3]);
-$ip[2]=hex($mac[4]);
-$ip[3]=hex($mac[5]);
-
-$ip[1] = $ip[1] % 64 + 64;
+my @ip = (100, hex($mac[3]) % 64 + 64, hex($mac[4]), hex($mac[5]));
 
 print "$ip[0].$ip[1].$ip[2].$ip[3]\n";
