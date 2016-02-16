@@ -10,23 +10,18 @@
 use strict;
 use warnings;
 
-=pod
+sub usage {
+    print <<USAGE;
+Usage: ./mm-commotion-mac2ip.pl <MAC address>
+Usage: ./mm-commotion-mac2ip.pl --list-all
 
- Usage: ./mm-commotion-mac2ip.pl <MAC address>
- Usage: ./mm-commotion-mac2ip.pl --list-all
-
- examples:
-   ./mm-commotion-mac2ip.pl DC:9F:DB:CE:13:57
-   ./mm-commotion-mac2ip.pl DC-9F-DB-CE-13-57
-   ./mm-commotion-mac2ip.pl DC 9F DB CE 13 57
-   ./mm-commotion-mac2ip.pl dc 9f db ce 13 57
-=cut
-
-use Getopt::Long qw(:config bundling auto_help);
-use Pod::Usage;
-
-my $list_all = '';
-GetOptions('list-all!' => \$list_all) or pod2usage(-exitval => 1);
+Examples:
+        ./mm-commotion-mac2ip.pl DC:9F:DB:CE:13:57
+        ./mm-commotion-mac2ip.pl DC-9F-DB-CE-13-57
+        ./mm-commotion-mac2ip.pl DC 9F DB CE 13 57
+        ./mm-commotion-mac2ip.pl dc 9f db ce 13 57
+USAGE
+}
 
 sub list_all {
     my $mac1 = 0xDC;
@@ -57,7 +52,11 @@ sub list_all {
 
 # Check for --list-all, otherwise proceed
 
-if ($list_all) { list_all(); exit; }
+if (@ARGV == 1 and $ARGV[0] =~ '-.*') {
+    if ($ARGV[0] eq '--list-all') { list_all(); }
+    else { usage(); }
+    exit;
+}
 
 # Proceed if not --list-all
 
