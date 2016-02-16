@@ -54,7 +54,7 @@ sub list_all {
 
 # Check for --list-all, otherwise proceed
 
-if (@ARGV == 1 and $ARGV[0] =~ '-.*') {
+if (@ARGV == 1 and $ARGV[0] =~ m/^-/) {
     if ($ARGV[0] eq '--list-all') { list_all(); }
     else { usage(); }
 }
