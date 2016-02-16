@@ -71,6 +71,7 @@ my $args=@ARGV;
 if ($args == 1) {
     # Split 1 argument into 6 separate arguments, 1 for each octet
     @ARGV = split('[:-]', $ARGV[0]);
+    if (@ARGV != 6) { usage(); }
 } elsif ($args != 6) {
     usage();
 }
