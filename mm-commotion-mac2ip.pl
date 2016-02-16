@@ -25,26 +25,17 @@ USAGE
 }
 
 sub list_all {
-    my $mac1 = 0xDC;
-    my $mac2 = 0x9F;
-    my $mac3 = 0xDB;
-    my $mac4 = 0x00;
-    my $mac5 = 0x00;
-    my $mac6 = 0x00;
-
-    my $ip1 = 100;
-    my $ip2 = 64;
-    my $ip3 = 0;
-    my $ip4 = 0;
+    my @mac = (0xDC, 0x9F, 0xDB, 0x00, 0x00, 0x00);
+    my @ip = (100, 64, 0, 0);
 
     for my $i (0 .. 255) {
-        $mac4 = $i;
+        $mac[3] = $i;
         
         # Format IP address
-        my $ip = sprintf('%d.%d.%d.%d', $ip1, $i % 64 + 64, $ip3, $ip4);
+        my $ip = sprintf('%d.%d.%d.%d', $ip[0], $i % 64 + 64, $ip[2], $ip[3]);
 
         # Format MAC address
-        my $mac = sprintf('%02X:%02X:%02X:%02X:%02X:%02X', $mac1, $mac2, $mac3, $mac4, $mac5, $mac6);
+        my $mac = sprintf('%02X:%02X:%02X:%02X:%02X:%02X', @mac);
 
         ## Output matching IP address and MAC address
         printf("%-15s => %s\n", $ip, $mac);
