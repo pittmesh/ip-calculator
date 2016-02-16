@@ -67,9 +67,9 @@ if ($args == 1) {
     usage();
 }
 
-$_ = uc for @ARGV;
-my $i = 0; my @mac;
-for (@ARGV) { $mac[$i++] = $_; }
+my $i = 0;
+my @mac = @ARGV;
+$_ = uc for @mac;
 
 # Ensure that we are working with the correct large MAC address block
 # DC-9F-DB
