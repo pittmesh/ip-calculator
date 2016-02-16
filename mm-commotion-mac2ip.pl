@@ -67,7 +67,6 @@ if ($args == 1) {
     usage();
 }
 
-my $i = 0;
 my @mac = @ARGV;
 $_ = uc for @mac;
 
