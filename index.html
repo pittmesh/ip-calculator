@@ -13,6 +13,7 @@
 
       @media all and (min-width: 400px) {
         .output {
+          display: inline-block;
           white-space: nowrap;
         }
         .output label {
@@ -61,24 +62,24 @@
     <form id="calc" onSubmit="return calc();">
       <fieldset form="calc">
         <legend>Input</legend>
-        <span class="input">
+        <div class="input">
           <label for="mac">MAC address</label>
           <input name="mac" id="mac" placeholder="de:ad:be:ef:00:00"/>
           <button type="submit">Calculate</button>
-        </span>
+        </div>
       </fieldset>
       <fieldset form="calc">
         <legend>Output</legend>
-        <span class="output">
+        <div class="output">
           <label for="mesh">Mesh IP</label>
           <input name="mesh" id="mesh" disabled="disabled"/>
           <button id="copy-mesh" type="button">copy</button>
-        </span>
-        <span class="output">
+        </div>
+        <div class="output">
           <label for="wlan">WLAN IP</label>
           <input name="wlan" id="wlan" disabled="disabled"/>
           <button id="copy-wlan" type="button">copy</button>
-        </span>
+        </div>
       </fieldset>
     </form>
     <div id="transcript">
