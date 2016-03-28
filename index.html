@@ -18,21 +18,21 @@
     This tool takes a router's MAC address and calculates the two IP addresses
     that the router needs: mesh interface and wlan client interface.
     </p>
-    <form id="calc" onSubmit="calc()">
+    <form id="calc" onSubmit="return calc();">
       <fieldset form="calc">
         <legend>Input</legend>
         <label for="mac">MAC address</label>
         <input name="mac" id="mac" placeholder="de:ad:be:ef:00:00"/>
-        <button type="button" onClick="calc()">Calculate</button>
+        <button type="submit">Calculate</button>
       </fieldset>
       <fieldset form="calc">
         <legend>Output</legend>
         <label for="mesh">Mesh IP</label>
         <input name="mesh" id="mesh" disabled="disabled"/>
-        <button id="copy-mesh">copy</button>
+        <button id="copy-mesh" type="button">copy</button>
         <label for="wlan">WLAN IP</label>
         <input name="wlan" id="wlan" disabled="disabled"/>
-        <button id="copy-wlan">copy</button>
+        <button id="copy-wlan" type="button">copy</button>
       </fieldset>
     </form>
     <div id="transcript">
@@ -68,7 +68,7 @@
 
         if(macArray.length != 6) {
           displayError("The MAC address does not appear to be valid. Ensure that there are six octets, separated by colons (:) or hyphens (-).");
-          return;
+          return false;
         }
 
         checkForStandardMfgs(firstThreeOctets(macArray));
