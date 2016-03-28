@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>PittMesh IP Address calculator</title>
     <style>
       #transcript {
@@ -8,6 +9,46 @@
         font-family: monospace;
         padding: 0.35em 0.75em 0.75em 0.625em;
         margin: 8px 2px;
+      }
+
+      @media all and (min-width: 400px) {
+        .output {
+          display: inline-block;
+          white-space: nowrap;
+        }
+        .output label {
+          display: inline-block;
+          width: 4.5em;
+        }
+      }
+
+      @media all and (max-width: 479px) {
+        .input input {
+          width: calc(100% - 9.25em);
+        }
+        .input label {
+          display: block;
+          text-align: center;
+        }
+        .output input {
+          width: calc(100% - 12.5em);
+        }
+        h1 {
+          text-align: center;
+        }
+      }
+
+      @media all and (max-width: 399px) {
+        .output {
+          white-space: normal;
+        }
+        .output input {
+          width: calc(100% - 7.25em);
+        }
+        .output label {
+          display: block;
+          text-align: center;
+        }
       }
     </style>
   </head>
@@ -18,21 +59,27 @@
     This tool takes a router's MAC address and calculates the two IP addresses
     that the router needs: mesh interface and wlan client interface.
     </p>
-    <form id="calc" onSubmit="calc()">
+    <form id="calc" onSubmit="return calc();">
       <fieldset form="calc">
         <legend>Input</legend>
-        <label for="mac">MAC address</label>
-        <input name="mac" id="mac" placeholder="de:ad:be:ef:00:00"/>
-        <button type="button" onClick="calc()">Calculate</button>
+        <div class="input">
+          <label for="mac">MAC address</label>
+          <input name="mac" id="mac" placeholder="de:ad:be:ef:00:00"/>
+          <button type="submit">Calculate</button>
+        </div>
       </fieldset>
       <fieldset form="calc">
         <legend>Output</legend>
-        <label for="mesh">Mesh IP</label>
-        <input name="mesh" id="mesh" disabled="disabled"/>
-        <button id="copy-mesh">copy</button>
-        <label for="wlan">WLAN IP</label>
-        <input name="wlan" id="wlan" disabled="disabled"/>
-        <button id="copy-wlan">copy</button>
+        <div class="output">
+          <label for="mesh">Mesh IP</label>
+          <input name="mesh" id="mesh" disabled="disabled"/>
+          <button id="copy-mesh" type="button">copy</button>
+        </div>
+        <div class="output">
+          <label for="wlan">WLAN IP</label>
+          <input name="wlan" id="wlan" disabled="disabled"/>
+          <button id="copy-wlan" type="button">copy</button>
+        </div>
       </fieldset>
     </form>
     <div id="transcript">
@@ -40,6 +87,7 @@
       <p><a href="https://github.com/pittmesh/ip-calculator">Fork ip-calculator on Github</a>.</p>
     </div>
     <script>
+      "use strict";
       //
       // constants
       //
@@ -61,17 +109,21 @@
       var meshEl = document.getElementById('mesh');
       var wlanEl = document.getElementById('wlan');
       var transcriptEl = document.getElementById('transcript');
+      
+      var cssError = "color:red; font-family:helvetica,sans-serif; font-weight:bold; text-shadow:0 1px 2px rgba(0,0,0,.5);";
+      var cssSuccess = "color:green; font-family:helvetica,sans-serif; font-weight:bold; text-shadow:0 1px 2px rgba(0,0,0,.5);";
+      var cssWarning = "background-color:gray; color:yellow; display: block; font-family:helvetica,sans-serif; font-weight:bold; text-shadow:0 1px 2px rgba(0,0,0,.5); width: 100%;";
 
       function calc() {
         var mac = macEl.value;
-        var macArray = separateOctets(mac);
+        var macArray = mac.split(/[:-]/);
 
-        if(macArray.length != 6) {
-          displayWarning("The MAC address does not appear to be valid. Ensure that there are six octets, separated by a colon (:).");
-          return;
+        if (!mac.match(/^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/)) {
+          displayError("The MAC address does not appear to be valid. Ensure that there are six octets, separated by colons (:) or hyphens (-) with valid hexadecimal values 00-FF");
+          return false;
         }
 
-        checkForStandardMfgs(firstThreeOctets(macArray));
+        if (checkForStandardMfgs(firstThreeOctets(macArray)) === false) return false;
 
         var macArrayDecimals = convertHexToDecimals(macArray);
         var meshIP = calcMeshIP(lastThreeOctets(macArrayDecimals));
@@ -80,16 +132,8 @@
         meshEl.value = meshIP;
         wlanEl.value = wlanIP;
 
-        log("Success!");
+        displaySuccess("MAC Address "+macArray.join(":")+" calculates to Mesh IP "+meshIP+" WLAN IP "+wlanIP);
         return false;
-      }
-
-      function separateOctets(mac) {
-        if(-1 != mac.indexOf(":"))
-          return mac.split(":");
-        if(-1 != mac.indexOf("-"))
-          return mac.split("-");
-        //TODO: handle unseparated
       }
 
       function calcMeshIP(lastThree) {
@@ -103,31 +147,48 @@
       function makeIP(arr) { return arr.join("."); }
 
       function checkForStandardMfgs(firstThree) {
-        if(-1 == knownMacs.indexOf(firstThree.join(""))){
-          displayWarning(
+        if(-1 == knownMacs.indexOf(firstThree.join("").toUpperCase())){
+          displayError(
             "The MAC address does not appear to be from a PittMesh standard manufacturer (" +
             standardMfgs.join(", ") +
             "). The IP address calculation may be invalid.");
+          return false;
         }
       }
 
-      function log(text) {
-        var date = new Date();
-        var timestamp = [date.getHours(), date.getMinutes(), date.getSeconds()].join(":");
-        var message = "[" + timestamp + "] " + text;
+      function pad(s, l, p) { return (Array(l||2).join(p||"0")+s).slice(-l||-2); }
+      function padcall(c, i, a) { return pad(c); }
 
-        transcriptEl.appendFirst(createLogLineElement(message));
-        console.log(message);
+      function log(text, style) {
+        var date = new Date();
+        var timestamp = "["+[date.getHours(), date.getMinutes(), date.getSeconds()].map(padcall).join(":")+"]";
+        transcriptEl.appendFirst(createLogLineElement(timestamp, text, style));
+        console.log("[%.2d:%.2d:%.2d] %c"+text, date.getHours(), date.getMinutes(), date.getSeconds(), style);
+      }
+
+      function displayError(text) {
+        log(text, cssError);
+      }
+
+      function displaySuccess(text) {
+        log(text, cssSuccess);
       }
 
       function displayWarning(text) {
-        log(text);
+        log(text, cssWarning);
       }
-      //TODO: make warnings red and successes green
-      function createLogLineElement(text) {
-        var line = document.createElement("p");
-        var textEl = document.createTextNode(text);
-        line.appendChild(textEl);
+
+      function createLogLineElement(time, text, style) {
+        var line     = document.createElement("p");
+        var lineTime = document.createElement("span");
+        var lineText = document.createElement("span");
+        lineTime.appendChild(document.createTextNode(time));
+        lineText.appendChild(document.createTextNode(text));
+        lineTime.classList.add("time");
+        lineText.classList.add("text");
+        lineText.style = style;
+        line.appendChild(lineTime);
+        line.appendChild(lineText);
         return line;
       }
 
@@ -143,19 +204,15 @@
             this.appendChild(childNode);
       };
 
-      // and now the copy button stuff
-      var copyMesh = document.getElementById("copy-mesh");
-      var copyWlan = document.getElementById("copy-wlan");
-
       function doCopy(element) {
         element.disabled = false;
         element.select();
         try {
           var successful = document.execCommand('copy');
           var msg = successful ? 'Successfully' : 'Unsuccessfully';
-          log(msg + " copied to clipboard.");
+          displaySuccess(msg + " copied to clipboard.");
         } catch (err) {
-          log("Oops, unable to copy to clipboard. You are on your own.");
+          displayError("Oops, unable to copy to clipboard. You are on your own.");
         } finally {
           element.disabled = true;
         }
@@ -168,8 +225,8 @@
         }
       }
 
-      copyMesh.addEventListener('click', copyInput(meshEl));
-      copyWlan.addEventListener('click', copyInput(wlanEl));
+      document.getElementById("copy-mesh").addEventListener('click', copyInput(meshEl));
+      document.getElementById("copy-wlan").addEventListener('click', copyInput(wlanEl));
     </script>
   </body>
 </html>
