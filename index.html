@@ -67,7 +67,7 @@
         var macArray = mac.split(/[:-]/);
 
         if(macArray.length != 6) {
-          displayWarning("The MAC address does not appear to be valid. Ensure that there are six octets, separated by a colon (:).");
+          displayError("The MAC address does not appear to be valid. Ensure that there are six octets, separated by colons (:) or hyphens (-).");
           return;
         }
 
@@ -96,30 +96,39 @@
 
       function checkForStandardMfgs(firstThree) {
         if(-1 == knownMacs.indexOf(firstThree.join(""))){
-          displayWarning(
+          displayError(
             "The MAC address does not appear to be from a PittMesh standard manufacturer (" +
             standardMfgs.join(", ") +
             "). The IP address calculation may be invalid.");
         }
       }
 
-      function log(text) {
+      function log(text, style = "") {
         var date = new Date();
         var timestamp = [date.getHours(), date.getMinutes(), date.getSeconds()].join(":");
         var message = "[" + timestamp + "] " + text;
 
-        transcriptEl.appendFirst(createLogLineElement(message));
-        console.log(message);
+        transcriptEl.appendFirst(createLogLineElement(message, style));
+        console.log("%c"+message, style);
+      }
+
+      function displayError(text) {
+        log(text, 'color:red; font-family:helvetica,sans-serif; font-weight:bold; text-shadow:0 1px 2px rgba(0,0,0,.5);');
+      }
+
+      function displaySuccess(text) {
+        log(text, 'color:green; font-family:helvetica,sans-serif; font-weight:bold; text-shadow:0 1px 2px rgba(0,0,0,.5);');
       }
 
       function displayWarning(text) {
-        log(text);
+        log(text, 'background-color:gray; color:yellow; display: block; font-family:helvetica,sans-serif; font-weight:bold; text-shadow:0 1px 2px rgba(0,0,0,.5); width: 100%;');
       }
-      //TODO: make warnings red and successes green
-      function createLogLineElement(text) {
+
+      function createLogLineElement(text, style) {
         var line = document.createElement("p");
         var textEl = document.createTextNode(text);
         line.appendChild(textEl);
+        line.style = style;
         return line;
       }
 
