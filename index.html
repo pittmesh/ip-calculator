@@ -10,6 +10,45 @@
         padding: 0.35em 0.75em 0.75em 0.625em;
         margin: 8px 2px;
       }
+
+      @media all and (min-width: 400px) {
+        .output {
+          white-space: nowrap;
+        }
+        .output label {
+          display: inline-block;
+          width: 4.5em;
+        }
+      }
+
+      @media all and (max-width: 479px) {
+        .input input {
+          width: calc(100% - 9.25em);
+        }
+        .input label {
+          display: block;
+          text-align: center;
+        }
+        .output input {
+          width: calc(100% - 12.5em);
+        }
+        h1 {
+          text-align: center;
+        }
+      }
+
+      @media all and (max-width: 399px) {
+        .output {
+          white-space: normal;
+        }
+        .output input {
+          width: calc(100% - 7.25em);
+        }
+        .output label {
+          display: block;
+          text-align: center;
+        }
+      }
     </style>
   </head>
   <body>
@@ -22,18 +61,24 @@
     <form id="calc" onSubmit="return calc();">
       <fieldset form="calc">
         <legend>Input</legend>
-        <label for="mac">MAC address</label>
-        <input name="mac" id="mac" placeholder="de:ad:be:ef:00:00"/>
-        <button type="submit">Calculate</button>
+        <span class="input">
+          <label for="mac">MAC address</label>
+          <input name="mac" id="mac" placeholder="de:ad:be:ef:00:00"/>
+          <button type="submit">Calculate</button>
+        </span>
       </fieldset>
       <fieldset form="calc">
         <legend>Output</legend>
-        <label for="mesh">Mesh IP</label>
-        <input name="mesh" id="mesh" disabled="disabled"/>
-        <button id="copy-mesh" type="button">copy</button>
-        <label for="wlan">WLAN IP</label>
-        <input name="wlan" id="wlan" disabled="disabled"/>
-        <button id="copy-wlan" type="button">copy</button>
+        <span class="output">
+          <label for="mesh">Mesh IP</label>
+          <input name="mesh" id="mesh" disabled="disabled"/>
+          <button id="copy-mesh" type="button">copy</button>
+        </span>
+        <span class="output">
+          <label for="wlan">WLAN IP</label>
+          <input name="wlan" id="wlan" disabled="disabled"/>
+          <button id="copy-wlan" type="button">copy</button>
+        </span>
       </fieldset>
     </form>
     <div id="transcript">
@@ -130,6 +175,8 @@
         var lineText = document.createElement("span");
         lineTime.appendChild(document.createTextNode(time));
         lineText.appendChild(document.createTextNode(text));
+        lineTime.classList.add("time");
+        lineText.classList.add("text");
         lineText.style = style;
         line.appendChild(lineTime);
         line.appendChild(lineText);
