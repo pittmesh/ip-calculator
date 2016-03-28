@@ -117,8 +117,8 @@
         var mac = macEl.value;
         var macArray = mac.split(/[:-]/);
 
-        if(macArray.length != 6) {
-          displayError("The MAC address does not appear to be valid. Ensure that there are six octets, separated by colons (:) or hyphens (-).");
+        if (!mac.match(/^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/)) {
+          displayError("The MAC address does not appear to be valid. Ensure that there are six octets, separated by colons (:) or hyphens (-) with valid hexadecimal values 00-FF");
           return false;
         }
 
