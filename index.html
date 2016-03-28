@@ -105,10 +105,8 @@
 
       function log(text, style = "") {
         var date = new Date();
-        var timestamp = [('0'+date.getHours()).slice(-2), ('0'+date.getMinutes()).slice(-2), ('0'+date.getSeconds()).slice(-2)].join(":");
-        var message = "[" + timestamp + "] " + text;
-
-        transcriptEl.appendFirst(createLogLineElement(message, style));
+        var timestamp = "["+[('0'+date.getHours()).slice(-2), ('0'+date.getMinutes()).slice(-2), ('0'+date.getSeconds()).slice(-2)].join(":")+"]";
+        transcriptEl.appendFirst(createLogLineElement(timestamp, text, style));
         console.log("[%.2d:%.2d:%.2d] %c"+text, date.getHours(), date.getMinutes(), date.getSeconds(), style);
       }
 
@@ -124,11 +122,15 @@
         log(text, 'background-color:gray; color:yellow; display: block; font-family:helvetica,sans-serif; font-weight:bold; text-shadow:0 1px 2px rgba(0,0,0,.5); width: 100%;');
       }
 
-      function createLogLineElement(text, style) {
-        var line = document.createElement("p");
-        var textEl = document.createTextNode(text);
-        line.appendChild(textEl);
-        line.style = style;
+      function createLogLineElement(time, text, style) {
+        var line     = document.createElement("p");
+        var lineTime = document.createElement("span");
+        var lineText = document.createElement("span");
+        lineTime.appendChild(document.createTextNode(time));
+        lineText.appendChild(document.createTextNode(text));
+        lineText.style = style;
+        line.appendChild(lineTime);
+        line.appendChild(lineText);
         return line;
       }
 
