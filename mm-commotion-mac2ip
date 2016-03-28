@@ -91,11 +91,22 @@ else
   exit 1
 fi
 
-# Ensure that we are working with the correct large MAC address block
-# DC-9F-DB
+# Ensure that we are working with a valid large MAC address block
+validMacs=(
+  # Ubiquiti
+  "F09FC2" "DC9FDB" "802AA8" "687251" "44D9E7" "24A43C" "0418D6" "002722" "00156D"
+  # TP-Link
+  "FCD733" "F8D111" "F81A67" "F4F26D" "F4EC38" "F483CD" "F0F336" "EC888F" "EC26CA" "EC172F" "E8DE27" "E894F6" "E4D332" "E005C5" "D85D4C" "D8150D" "D4016D" "D0C7C0" "CC3429" "C4E984" "C46E1F" "C06118" "C04A00" "BCD177" "BC4699" "B0487A" "A8574E" "A8154D" "A42BB0" "A0F3C1" "9C216A" "940C6D" "90F652" "90AE1B" "8C210A" "882593" "808917" "78A106" "74EA3A" "6CE873" "647002" "6466B3" "645601" "60E327" "5C899A" "5C63BF" "54E6FC" "54C80F" "50FA84" "50C7BF" "50BD5F" "44B32D" "40169F" "3C46D8" "388345" "30B5C2" "282CB2" "20DCE6" "1CFA68" "14E6E4" "14CF92" "14CC20" "148692" "147590" "10FEED" "0C8268" "0C722C" "085700" "002719" "002586" "0023CD" "002127" "001D0F" "0019E0" "001478" "000AEB"
+)
 
-if [ ! $mac1 = "DC" -o ! $mac2 = "9F" -o ! $mac3 = "DB" ]; then
-  echo "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported."
+supported=0
+for fto in "${validMacs[@]}"; do
+  if [[ "$mac1:$mac2:$mac3" == "${fto:0:2}:${fto:2:2}:${fto:4:2}" ]]; then supported=1;fi
+done
+echo s $supported
+
+if [[ $supported == 0 ]]; then
+  echo "Unsupported MAC address. Only Ubiquiti-assigned and TP-Link-assigned MAC addresses are supported."
   exit 1
 fi
 
