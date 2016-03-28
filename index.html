@@ -147,10 +147,6 @@
             this.appendChild(childNode);
       };
 
-      // and now the copy button stuff
-      var copyMesh = document.getElementById("copy-mesh");
-      var copyWlan = document.getElementById("copy-wlan");
-
       function doCopy(element) {
         element.disabled = false;
         element.select();
@@ -172,8 +168,8 @@
         }
       }
 
-      copyMesh.addEventListener('click', copyInput(meshEl));
-      copyWlan.addEventListener('click', copyInput(wlanEl));
+      document.getElementById("copy-mesh").addEventListener('click', copyInput(meshEl));
+      document.getElementById("copy-wlan").addEventListener('click', copyInput(wlanEl));
     </script>
   </body>
 </html>
