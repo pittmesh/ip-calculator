@@ -80,7 +80,7 @@
         meshEl.value = meshIP;
         wlanEl.value = wlanIP;
 
-        log("Success!");
+        displaySuccess("Success!");
         return false;
       }
 
@@ -156,9 +156,9 @@
         try {
           var successful = document.execCommand('copy');
           var msg = successful ? 'Successfully' : 'Unsuccessfully';
-          log(msg + " copied to clipboard.");
+          displaySuccess(msg + " copied to clipboard.");
         } catch (err) {
-          log("Oops, unable to copy to clipboard. You are on your own.");
+          displayError("Oops, unable to copy to clipboard. You are on your own.");
         } finally {
           element.disabled = true;
         }
