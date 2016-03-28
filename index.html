@@ -122,7 +122,7 @@
           return false;
         }
 
-        checkForStandardMfgs(firstThreeOctets(macArray));
+        if (checkForStandardMfgs(firstThreeOctets(macArray)) === false) return false;
 
         var macArrayDecimals = convertHexToDecimals(macArray);
         var meshIP = calcMeshIP(lastThreeOctets(macArrayDecimals));
@@ -146,11 +146,12 @@
       function makeIP(arr) { return arr.join("."); }
 
       function checkForStandardMfgs(firstThree) {
-        if(-1 == knownMacs.indexOf(firstThree.join(""))){
+        if(-1 == knownMacs.indexOf(firstThree.join("").toUpperCase())){
           displayError(
             "The MAC address does not appear to be from a PittMesh standard manufacturer (" +
             standardMfgs.join(", ") +
             "). The IP address calculation may be invalid.");
+          return false;
         }
       }
 
