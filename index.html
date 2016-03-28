@@ -64,7 +64,7 @@
 
       function calc() {
         var mac = macEl.value;
-        var macArray = separateOctets(mac);
+        var macArray = mac.split(/[:-]/);
 
         if(macArray.length != 6) {
           displayWarning("The MAC address does not appear to be valid. Ensure that there are six octets, separated by a colon (:).");
@@ -82,14 +82,6 @@
 
         log("Success!");
         return false;
-      }
-
-      function separateOctets(mac) {
-        if(-1 != mac.indexOf(":"))
-          return mac.split(":");
-        if(-1 != mac.indexOf("-"))
-          return mac.split("-");
-        //TODO: handle unseparated
       }
 
       function calcMeshIP(lastThree) {
