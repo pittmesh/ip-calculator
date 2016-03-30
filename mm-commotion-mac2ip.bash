@@ -73,7 +73,7 @@ args=$#
 # 1 -> DC:9F:DB:CE:13:57 -or- DC-9F-DB-CE-13-57
 # 6 -> DC 9F DB CE 13 57
 
-if [ $args -eq 1 ]; then
+if [ $args -eq 1 -a ${#1} -eq 17 ]; then
   # Split 1 argument into 6 separate arguments, 1 for each octet
   # and pass the 6 arguments to a new instance of this script
   $0 `echo $1 | tr ":-" " "`
