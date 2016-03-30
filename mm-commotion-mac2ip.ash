@@ -80,17 +80,18 @@ else
 fi
 
 # Ensure that we are working with a valid large MAC address block
-validMacs=(
-    # Ubiquiti
-    "F09FC2" "DC9FDB" "802AA8" "687251" "44D9E7" "24A43C" "0418D6" "002722" "00156D"
-    # TP-Link
-    "FCD733" "F8D111" "F81A67" "F4F26D" "F4EC38" "F483CD" "F0F336" "EC888F" "EC26CA" "EC172F" "E8DE27" "E894F6" "E4D332" "E005C5" "D85D4C" "D8150D" "D4016D" "D0C7C0" "CC3429" "C4E984" "C46E1F" "C06118" "C04A00" "BCD177" "BC4699" "B0487A" "A8574E" "A8154D" "A42BB0" "A0F3C1" "9C216A" "940C6D" "90F652" "90AE1B" "8C210A" "882593" "808917" "78A106" "74EA3A" "6CE873" "647002" "6466B3" "645601" "60E327" "5C899A" "5C63BF" "54E6FC" "54C80F" "50FA84" "50C7BF" "50BD5F" "44B32D" "40169F" "3C46D8" "388345" "30B5C2" "282CB2" "20DCE6" "1CFA68" "14E6E4" "14CF92" "14CC20" "148692" "147590" "10FEED" "0C8268" "0C722C" "085700" "002719" "002586" "0023CD" "002127" "001D0F" "0019E0" "001478" "000AEB"
-)
+validMacs=" "
+# Ubiquiti
+for block in "F0:9F:C2" "DC:9F:DB" "80:2A:A8" "68:72:51" "44:D9:E7" "24:A4:3C" "04:18:D6" "00:27:22" "00:15:6D";do
+    validMacs="${validMacs}${block} "
+done
+# TP-Link
+for block in "FC:D7:33" "F8:D1:11" "F8:1A:67" "F4:F2:6D" "F4:EC:38" "F4:83:CD" "F0:F3:36" "EC:88:8F" "EC:26:CA" "EC:17:2F" "E8:DE:27" "E8:94:F6" "E4:D3:32" "E0:05:C5" "D8:5D:4C" "D8:15:0D" "D4:01:6D" "D0:C7:C0" "CC:34:29" "C4:E9:84" "C4:6E:1F" "C0:61:18" "C0:4A:00" "BC:D1:77" "BC:46:99" "B0:48:7A" "A8:57:4E" "A8:15:4D" "A4:2B:B0" "A0:F3:C1" "9C:21:6A" "94:0C:6D" "90:F6:52" "90:AE:1B" "8C:21:0A" "88:25:93" "80:89:17" "78:A1:06" "74:EA:3A" "6C:E8:73" "64:70:02" "64:66:B3" "64:56:01" "60:E3:27" "5C:89:9A" "5C:63:BF" "54:E6:FC" "54:C8:0F" "50:FA:84" "50:C7:BF" "50:BD:5F" "44:B3:2D" "40:16:9F" "3C:46:D8" "38:83:45" "30:B5:C2" "28:2C:B2" "20:DC:E6" "1C:FA:68" "14:E6:E4" "14:CF:92" "14:CC:20" "14:86:92" "14:75:90" "10:FE:ED" "0C:82:68" "0C:72:2C" "08:57:00" "00:27:19" "00:25:86" "00:23:CD" "00:21:27" "00:1D:0F" "00:19:E0" "00:14:78" "00:0A:EB";do
+    validMacs="${validMacs}${block} "
+done
 
 supported=0
-for fto in "${validMacs[@]}"; do
-    if [[ "$mac1:$mac2:$mac3" == "${fto:0:2}:${fto:2:2}:${fto:4:2}" ]]; then supported=1;fi
-done
+if [ -n "$(echo $validMacs|grep " $mac1:$mac2:$mac3 ")" ];then supported=1;fi
 
 if [ ! $mac1 = "DC" -o ! $mac2 = "9F" -o ! $mac3 = "DB" ]; then
     echo "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported."
