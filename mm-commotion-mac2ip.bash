@@ -104,7 +104,7 @@ for fto in "${validMacs[@]}"; do
   if [[ "$mac1:$mac2:$mac3" == "${fto:0:2}:${fto:2:2}:${fto:4:2}" ]]; then supported=1;fi
 done
 
-if [ ! $mac1 = "DC" -o ! $mac2 = "9F" -o ! $mac3 = "DB" ]; then
+if [ $supported -eq 0 ]; then
   echo "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported."
   exit 1
 fi
