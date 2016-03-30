@@ -12,14 +12,14 @@ use warnings;
 
 sub usage {
     print <<USAGE;
-Usage: ./mm-commotion-mac2ip.pl <MAC address>
-Usage: ./mm-commotion-mac2ip.pl --list-all
+Usage: ./mm-mac2ipv4.pl <MAC address>
+Usage: ./mm-mac2ipv4.pl --list-all
 
 Examples:
-        ./mm-commotion-mac2ip.pl DC:9F:DB:CE:13:57
-        ./mm-commotion-mac2ip.pl DC-9F-DB-CE-13-57
-        ./mm-commotion-mac2ip.pl DC 9F DB CE 13 57
-        ./mm-commotion-mac2ip.pl dc 9f db ce 13 57
+        ./mm-mac2ipv4.pl DC:9F:DB:CE:13:57
+        ./mm-mac2ipv4.pl DC-9F-DB-CE-13-57
+        ./mm-mac2ipv4.pl DC 9F DB CE 13 57
+        ./mm-mac2ipv4.pl dc 9f db ce 13 57
 USAGE
     exit 1;
 }
