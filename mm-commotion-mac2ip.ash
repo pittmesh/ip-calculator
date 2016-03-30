@@ -26,7 +26,7 @@ while getopts ":-:" opt; do
         for ip2 in `seq 0 255`;do
             mac4=$(printf "%02X\n" $ip2)
 
-            ((ip2=ip2%64 + 64))
+            ip2=$(expr $ip2 % 64 + 64)
 
             # Format IP address
             ip="$ip1.$ip2.$ip3.$ip4"
