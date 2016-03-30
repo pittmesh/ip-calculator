@@ -45,18 +45,6 @@ while getopts ":-:" opt; do
     fi
 done
 
-if [[ "$*" =~ -*- ]]; then
-    echo "Usage: $0 <MAC address>"
-    echo "Usage: $0 --list-all"
-    echo
-    echo "examples:"
-    echo "  $0 DC:9F:DB:CE:13:57"
-    echo "  $0 DC-9F-DB-CE-13-57"
-    echo "  $0 DC 9F DB CE 13 57"
-    echo "  $0 dc 9f db ce 13 57"
-    exit 1
-fi
-
 # Proceed if not --list-all
 
 # Get # of arguments passed to this script
