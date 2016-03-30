@@ -73,7 +73,7 @@ args=$#
 # 1 -> DC:9F:DB:CE:13:57 -or- DC-9F-DB-CE-13-57
 # 6 -> DC 9F DB CE 13 57
 
-if [ $args -eq 1 ]; then
+if [ $args -eq 1 -a ${#1} -eq 17 ]; then
   # Split 1 argument into 6 separate arguments, 1 for each octet
   # and pass the 6 arguments to a new instance of this script
   $0 `echo $1 | tr ":-" " "`
@@ -104,7 +104,7 @@ for fto in "${validMacs[@]}"; do
   if [[ "$mac1:$mac2:$mac3" == "${fto:0:2}:${fto:2:2}:${fto:4:2}" ]]; then supported=1;fi
 done
 
-if [ ! $mac1 = "DC" -o ! $mac2 = "9F" -o ! $mac3 = "DB" ]; then
+if [ $supported -eq 0 ]; then
   echo "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported."
   exit 1
 fi
