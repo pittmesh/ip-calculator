@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh
 #
 # © 2016 Meta Mesh Wireless Communities. All rights reserved.
 # Licensed under the terms of the MIT license.
@@ -87,6 +87,6 @@ ip2=$(printf "%d" "0x$mac4")
 ip3=$(printf "%d" "0x$mac5")
 ip4=$(printf "%d" "0x$mac6")
 
-((ip2=ip2%64 + 64))
+ip2=$(expr $ip2 % 64 + 64)
 
 echo "$ip1.$ip2.$ip3.$ip4"
