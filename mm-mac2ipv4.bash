@@ -29,9 +29,9 @@ function list-all {
   ip4=0
 
   for octet in `seq 0 255`;do
-    mac4=$(printf "%02X\n" $ip2)
-
     normalize-ipv4-octet-2 $octet
+
+    mac4=$(printf "%02X\n" $ip2)
 
     # Format IP address
     ip="$ip1.$ip2.$ip3.$ip4"
