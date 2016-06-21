@@ -75,7 +75,6 @@ randIPMA() {
     randMA[2]="${randMA[2]}:$(printf "%02X\n" $randdec)"
     randMA[3]="${randMA[3]}:$(printf "%02X\n" $randdec)"
     randIP="$randIP.$randdec"
-    return
 }
 
 random-tests() {
