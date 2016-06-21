@@ -37,27 +37,26 @@ randIPv4octet1() {
 randIPv4octet2() {
     # Random 96-127
     ((randdec=$RANDOM / 1024 + 96))
-    return $randdec
 }
 
 randIPv4octet3() {
     # Random 0-255
     ((randdec=$RANDOM / 128))
-    return $randdec
 }
 
 randIPv4octet4() {
     # Random 0-255 every other 32
     ((randdec=$RANDOM / 128))
     ((randdec=randdec - (randdec % 64 - randdec % 32)))
-    return $randdec
 }
 
 randIPMA() {
     local a
     randMA=("DC:9F:DB" "DC:9F:DB" "DC:9F:DB" "DC:9F:DB")
     randIPv4octet1
+    echo $randdec
     randIPv4octet2
+    echo $randdec
     randMA[0]="${randMA[0]}:$(printf "%02X\n" $((randdec - 64)))"
     randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
     randMA[2]="${randMA[2]}:$(printf "%02X\n" $((randdec + 64)))"
