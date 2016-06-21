@@ -23,10 +23,10 @@ while getopts ":-:" opt; do
         ip3=0
         ip4=0
 
-        for ip2 in `seq 0 255`;do
+        for octet in `seq 0 255`;do
             mac4=$(printf "%02X\n" $ip2)
 
-            ip2=$(expr $ip2 % 32 + 96)
+            ip2=$(expr $octet % 32 + 96)
 
             # Format IP address
             ip="$ip1.$ip2.$ip3.$ip4"
