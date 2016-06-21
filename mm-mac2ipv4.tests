@@ -30,17 +30,24 @@ test() {
     fi
 }
 
-rand96to127() {
+randIPv4octet1() {
+    randIP="100"
+}
+
+randIPv4octet2() {
+    # Random 96-127
     ((randdec=$RANDOM / 1024 + 96))
     return $randdec
 }
 
-rand0to255() {
+randIPv4octet3() {
+    # Random 0-255
     ((randdec=$RANDOM / 128))
     return $randdec
 }
 
-rand0to255eo32() {
+randIPv4octet4() {
+    # Random 0-255 every other 32
     ((randdec=$RANDOM / 128))
     ((randdec=randdec - (randdec % 64 - randdec % 32)))
     return $randdec
@@ -49,24 +56,20 @@ rand0to255eo32() {
 randIPMA() {
     local a
     randMA=("DC:9F:DB" "DC:9F:DB" "DC:9F:DB" "DC:9F:DB")
-    # 1st IPv4 octet
-    randIP="100"
-    # 2nd IPv4 octet
-    rand96to127
+    randIPv4octet1
+    randIPv4octet2
     randMA[0]="${randMA[0]}:$(printf "%02X\n" $((randdec - 64)))"
     randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
     randMA[2]="${randMA[2]}:$(printf "%02X\n" $((randdec + 64)))"
     randMA[3]="${randMA[3]}:$(printf "%02X\n" $((randdec + 128)))"
     randIP="$randIP.$randdec"
-    # 3rd IPv4 octet
-    rand0to255
+    randIPv4octet3
     randMA[0]="${randMA[0]}:$(printf "%02X\n" $randdec)"
     randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
     randMA[2]="${randMA[2]}:$(printf "%02X\n" $randdec)"
     randMA[3]="${randMA[3]}:$(printf "%02X\n" $randdec)"
     randIP="$randIP.$randdec"
-    # 4th IPv4 octet
-    rand0to255eo32 # every other 32
+    randIPv4octet4
     randMA[0]="${randMA[0]}:$(printf "%02X\n" $randdec)"
     randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
     randMA[2]="${randMA[2]}:$(printf "%02X\n" $randdec)"
