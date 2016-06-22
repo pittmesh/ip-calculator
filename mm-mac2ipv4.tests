@@ -30,35 +30,50 @@ test() {
     fi
 }
 
-rand64to127() {
-    ((randdec=$RANDOM / 512 + 64))
-    return $randdec
+randIPv4octet1() {
+    randIP="100"
 }
 
-rand0to255() {
+randIPv4octet2() {
+    # Random 96-127
+    ((randdec=$RANDOM / 1024 + 96))
+}
+
+randIPv4octet3() {
+    # Random 0-255
     ((randdec=$RANDOM / 128))
-    return $randdec
+}
+
+randIPv4octet4() {
+    # Random 0-255 every other 32
+    ((randdec=$RANDOM / 128))
+    ((randdec=randdec - (randdec % 64 - randdec % 32)))
 }
 
 randIPMA() {
     local a
     randMA=("DC:9F:DB" "DC:9F:DB" "DC:9F:DB" "DC:9F:DB")
-    randIP="100"
-    rand64to127
+    randIPv4octet1
+    echo $randdec
+    randIPv4octet2
+    echo $randdec
     randMA[0]="${randMA[0]}:$(printf "%02X\n" $((randdec - 64)))"
     randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
     randMA[2]="${randMA[2]}:$(printf "%02X\n" $((randdec + 64)))"
     randMA[3]="${randMA[3]}:$(printf "%02X\n" $((randdec + 128)))"
     randIP="$randIP.$randdec"
-    for face in ^ ^; do
-        rand0to255
-        randMA[0]="${randMA[0]}:$(printf "%02X\n" $randdec)"
-        randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
-        randMA[2]="${randMA[2]}:$(printf "%02X\n" $randdec)"
-        randMA[3]="${randMA[3]}:$(printf "%02X\n" $randdec)"
-        randIP="$randIP.$randdec"
-    done
-    return
+    randIPv4octet3
+    randMA[0]="${randMA[0]}:$(printf "%02X\n" $randdec)"
+    randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
+    randMA[2]="${randMA[2]}:$(printf "%02X\n" $randdec)"
+    randMA[3]="${randMA[3]}:$(printf "%02X\n" $randdec)"
+    randIP="$randIP.$randdec"
+    randIPv4octet4
+    randMA[0]="${randMA[0]}:$(printf "%02X\n" $randdec)"
+    randMA[1]="${randMA[1]}:$(printf "%02X\n" $randdec)"
+    randMA[2]="${randMA[2]}:$(printf "%02X\n" $randdec)"
+    randMA[3]="${randMA[3]}:$(printf "%02X\n" $randdec)"
+    randIP="$randIP.$randdec"
 }
 
 random-tests() {
@@ -86,7 +101,7 @@ list-all-tests() {
 }
 
 for script_to_test in "${scripts_to_test[@]}"; do
-    list-all-tests
+    #list-all-tests
     random-tests
 done
 

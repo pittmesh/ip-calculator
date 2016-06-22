@@ -32,7 +32,7 @@ sub list_all {
         $mac[3] = $i;
         
         # Format IP address
-        my $ip = sprintf('%d.%d.%d.%d', $ip[0], $i % 64 + 64, $ip[2], $ip[3]);
+        my $ip = sprintf('%d.%d.%d.%d', $ip[0], $i % 32 + 96, $ip[2], $ip[3]);
 
         # Format MAC address
         my $mac = sprintf('%02X:%02X:%02X:%02X:%02X:%02X', @mac);
@@ -66,9 +66,15 @@ if (@ARGV != 6) { usage(); }
 my @mac = @ARGV;
 $_ = uc for @mac;
 
-# Ensure nothing
+# Ensure that we are working with the correct large MAC address block
+# DC-9F-DB
+
+if ($mac[0] ne "DC" || $mac[1] ne "9F" || $mac[2] ne "DB") {
+    print "Unsupported MAC address. Only Ubiquiti-assigned MAC addresses beginning with DC:9F:DB are supported.\n";
+    exit 1;
+}
 
 # Convert last three hexadecimal octets to decimal values
-my @ip = (100, hex($mac[3]) % 64 + 64, hex($mac[4]), hex($mac[5]));
+my @ip = (100, hex($mac[3]) % 32 + 96, hex($mac[4]), hex($mac[5]) - (hex($mac[5]) % 64 - hex($mac[5]) % 32));
 
 print "$ip[0].$ip[1].$ip[2].$ip[3]\n";

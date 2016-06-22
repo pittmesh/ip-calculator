@@ -7,6 +7,14 @@
 # * Jason Khanlar
 #
 
+function normalize-ipv4-octet-2 {
+  ((ip2=$1 % 32 + 96))
+}
+
+function normalize-ipv4-octet-4 {
+  ((ip4=$1 - ($1 % 64 - $1 % 32)))
+}
+
 function list-all {
   mac1=DC
   mac2=9F
@@ -20,10 +28,10 @@ function list-all {
   ip3=0
   ip4=0
 
-  for ip2 in `seq 0 255`;do
-    mac4=$(printf "%02X\n" $ip2)
+  for octet in `seq 0 255`;do
+    normalize-ipv4-octet-2 $octet
 
-    ((ip2=ip2%64 + 64))
+    mac4=$(printf "%02X\n" $ip2)
 
     # Format IP address
     ip="$ip1.$ip2.$ip3.$ip4"
@@ -99,6 +107,7 @@ ip2=$(printf "%d" "0x$mac4")
 ip3=$(printf "%d" "0x$mac5")
 ip4=$(printf "%d" "0x$mac6")
 
-((ip2=ip2%64 + 64))
+normalize-ipv4-octet-2 $ip2
+normalize-ipv4-octet-4 $ip4
 
 echo "$ip1.$ip2.$ip3.$ip4"
