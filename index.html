@@ -114,8 +114,8 @@
         }
 
         var macArrayDecimals = convertHexToDecimals(macArray);
-        var meshIP = calcMeshIP(lastThreeOctets(macArrayDecimals));
-        var wlanIP = calcWlanIP(lastTwoOctets(macArrayDecimals));
+        var meshIP = calcMeshIP(adjustOctets(lastThreeOctets(macArrayDecimals)));
+        var wlanIP = calcWlanIP(adjustOctets(lastTwoOctets(macArrayDecimals)));
 
         meshEl.value = meshIP;
         wlanEl.value = wlanIP;
@@ -168,6 +168,17 @@
         line.appendChild(lineTime);
         line.appendChild(lineText);
         return line;
+      }
+
+      function adjustOctets(arr) {
+	console.log(arr.length);
+        if (arr.length == 3) {
+          arr[0] %= 32 + 96;
+          arr[2] -= (arr[2] % 64 - arr[2] % 32);
+        } else if (arr.length == 2) {
+          arr[1] -= (arr[1] % 64 - arr[1] % 32);
+        }
+        return arr;
       }
 
       function convertHexToDecimals(arr) { return arr.map( function(h) { return parseInt(h, 16); } ); }
