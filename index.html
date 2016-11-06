@@ -91,16 +91,6 @@
       //
       // constants
       //
-      var standardMfgs = [];
-      // to generate from an www.adminsub.net/mac-address-finder/* list, do this in a browser console:
-      // [].slice.call(document.getElementsByClassName("bl558_line_2")).map(function(el){ return el.firstChild.firstChild; });
-      var ubiquitiMacs = ["F09FC2", "DC9FDB", "802AA8", "687251", "44D9E7", "24A43C", "0418D6", "002722", "00156D"];
-      standardMfgs.push("Ubiquiti");
-      var tplinkMacs = ["FCD733", "F8D111", "F81A67", "F4F26D", "F4EC38", "F483CD", "F0F336", "EC888F", "EC26CA", "EC172F", "E8DE27", "E894F6", "E4D332", "E005C5", "D85D4C", "D8150D", "D4016D", "D0C7C0", "CC3429", "C4E984", "C46E1F", "C06118", "C04A00", "BCD177", "BC4699", "B0487A", "A8574E", "A8154D", "A42BB0", "A0F3C1", "9C216A", "940C6D", "90F652", "90AE1B", "8C210A", "882593", "808917", "78A106", "74EA3A", "6CE873", "647002", "6466B3", "645601", "60E327", "5C899A", "5C63BF", "54E6FC", "54C80F", "50FA84", "50C7BF", "50BD5F", "44B32D", "40169F", "3C46D8", "388345", "30B5C2", "282CB2", "20DCE6", "1CFA68", "14E6E4", "14CF92", "14CC20", "148692", "147590", "10FEED", "0C8268", "0C722C", "085700", "002719", "002586", "0023CD", "002127", "001D0F", "0019E0", "001478", "000AEB"];
-      standardMfgs.push("TP-Link");
-
-      var knownMacs = ubiquitiMacs.concat(tplinkMacs);
-
       var meshPrefix = [100];
       var wlanPrefix = [10];
       var wlanSuffix = [1];
@@ -123,11 +113,9 @@
           return false;
         }
 
-        if (checkForStandardMfgs(firstThreeOctets(macArray)) === false) return false;
-
         var macArrayDecimals = convertHexToDecimals(macArray);
-        var meshIP = calcMeshIP(lastThreeOctets(macArrayDecimals));
-        var wlanIP = calcWlanIP(lastTwoOctets(macArrayDecimals));
+        var meshIP = calcMeshIP(adjustOctets(lastThreeOctets(macArrayDecimals)));
+        var wlanIP = calcWlanIP(adjustOctets(lastTwoOctets(macArrayDecimals)));
 
         meshEl.value = meshIP;
         wlanEl.value = wlanIP;
@@ -145,16 +133,6 @@
       }
 
       function makeIP(arr) { return arr.join("."); }
-
-      function checkForStandardMfgs(firstThree) {
-        if(-1 == knownMacs.indexOf(firstThree.join("").toUpperCase())){
-          displayError(
-            "The MAC address does not appear to be from a PittMesh standard manufacturer (" +
-            standardMfgs.join(", ") +
-            "). The IP address calculation may be invalid.");
-          return false;
-        }
-      }
 
       function pad(s, l, p) { return (Array(l||2).join(p||"0")+s).slice(-l||-2); }
       function padcall(c, i, a) { return pad(c); }
@@ -190,6 +168,17 @@
         line.appendChild(lineTime);
         line.appendChild(lineText);
         return line;
+      }
+
+      function adjustOctets(arr) {
+	console.log(arr.length);
+        if (arr.length == 3) {
+          arr[0] %= 32 + 96;
+          arr[2] -= (arr[2] % 64 - arr[2] % 32);
+        } else if (arr.length == 2) {
+          arr[1] -= (arr[1] % 64 - arr[1] % 32);
+        }
+        return arr;
       }
 
       function convertHexToDecimals(arr) { return arr.map( function(h) { return parseInt(h, 16); } ); }
